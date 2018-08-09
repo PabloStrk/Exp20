@@ -1,0 +1,112 @@
+/* IMPORTS */
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+/* GENERAL */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  font: 16px/1.5 'Montserrat', sans-serif;
+}
+
+h1 {
+  margin-bottom: 50px;
+  border-bottom: 5px solid #004f5f;
+  font-size: 1.8rem;
+  text-align: right;
+}
+
+/* GRID */
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+}
+
+/* VALUES */
+.gridContainer > .values {
+  padding: 50px 5vw;
+}
+
+
+.values > table {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 20px;
+}
+
+.values td, .values th {
+  text-align: center;
+  padding: 10px;
+}
+
+.values th {
+  color: #004f5f;
+}
+
+
+/* CONVERTOR */
+.gridContainer > .convertor {
+  padding: 50px 5vw;
+}
+
+.convertor > h3 {
+  margin-bottom: 15px;
+}
+
+.convertor > ul {
+  display: flex;
+  list-style: none;
+  height: 80px;
+}
+
+.convertor > ul ul {
+  list-style: none;
+}
+
+.convertor__item {
+  margin-right: 20px;
+}
+
+.convertor input[type=number] {
+  width: 100px;
+  border: none;
+  border-bottom: 2px solid #004f5f;
+  padding: 2px;
+  transition: 0.2s;
+  transition-timing-function: ease;
+}
+
+.convertor input[type=number]:focus {
+  border-bottom: 5px solid #A1FF94;
+}
+
+.convertor .button {
+  width: 30px;
+  border: none;
+  border-radius: 3px;
+  padding: 2px;
+  cursor: pointer;
+  background: linear-gradient(to right, #94FCFF, #A1FF94);
+}
+
+@media (min-width: 700px) {
+  .gridContainer {
+    grid-template-areas:  '. . . . .'
+                          '. v . c .';
+    grid-template-columns:8vw 34vw 4vw 46vw 8vw;
+    grid-template-rows: 15vh auto;
+  }
+
+  .gridContainer > .values {
+    grid-area: v;
+    padding: 0;
+  }
+
+  .gridContainer > .convertor {
+    grid-area: c;
+    padding: 0;
+  }
+}

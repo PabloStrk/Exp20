@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consumir Indicadores Económicos</title>
+  <link rel="stylesheet" href="app.css">
+
+</head>
+
+
+<body>
+  <div class="gridContainer" id="app">
+
+    <section class="values">
+      <h1>VALORES ACTUALES</h1>
+      <table>
+        <tr>
+          <th>Moneda</th>
+          <th>Valor</th>
+        </tr>
+        <tr v-for="v in values">
+          <td> {{ v.currency }} </td>
+          <td> {{ '$' + v.value }} </td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="convertor">
+      <h1>CONVERTOR DE UNIDADES</h1>
+
+      <h3>CLP a USD y EUR</h3>
+      <ul>
+        <li class="convertor__item"><input class="input" type="number" name="" value="" placeholder="0" v-model.number="inputTop"/></li>
+        <li class="convertor__item"><input class="button button--top" type="submit" name="" value=">"/></li>
+        <li class="convertor__item">
+          <ul>
+            <li><span class="clpToUsd"></span> USD</li>
+            <li><span class="clpToEur"></span> EUR</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>USD a CLP</h3>
+      <ul>
+        <li class="convertor__item"><input class="input" type="number" name="" value="" placeholder="0" v-model.number="inputBottom"/></li>
+        <li class="convertor__item"><input class="button button--bottom" type="submit" name="" value=">"/></li>
+        <li class="convertor__item"><span class="usdToClp"></span> CLP</li>
+      </ul>
+    </section>
+
+  </div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+<script>
+
+// Variables de datos del día
+// var d = new Date(),
+//     day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate(),
+//     month = d.getMonth() < 10 ? `0${d.getMonth()}` : d.getMonth(),
+//     today = `${day}-${month}-${d.getFullYear()}`;
+
+// Aplicación Vue
+var app = new Vue({
+  el: '#app',
+  data: {
+    // today: today,
+    values: [
+      { currency: 'USD', code: 'dolar', value: 0 },
+      { currency: 'EUR', code: 'euro' , value: 0 },
+      { currency: 'UF' , code: 'uf'   , value: 0 },
+      { currency: 'UTM', code: 'utm'  , value: 0 }
+    ],
+    inputTop: null,
+    inputBottom: null
+  },
+  methods: {
+    request: function(code) {
+      this.$http.get(`https://mindicador.cl/api/${code}`)
+        .then(function(data) {
+          console.log(data);
+          if ( code =='dolar' ) {
+            this.values[0].value = data.body.serie[0].valor;
+          } else if ( code == 'euro' ) {
+            this.values[1].value = data.body.serie[0].valor;
+          } else if ( code == 'uf' ) {
+            this.values[2].value = data.body.serie[0].valor;
+          } else if ( code == 'utm' ) {
+            this.values[3].value = data.body.serie[0].valor;
+          }
+        });
+    },
+    clpTo: function(currency) {
+      clpAmount = this.inputTop;
+      currency == 'usd' ? currencyValue = this.values[0].value : currencyValue = this.values[1].value;
+      return (clpAmount / currencyValue).toFixed(2);
+    },
+    usdTo: function() {
+      usdAmount = this.inputBottom;
+      usdValue = this.values[0].value;
+      return (usdAmount * usdValue).toFixed(2);
+    }
+  },
+  created: function() {
+    this.request(this.values[0].code);
+    this.request(this.values[1].code);
+    this.request(this.values[2].code);
+    this.request(this.values[3].code);
+  }
+})
+
+// Varioables para el convertor de unidades
+var btnTop = $(".button--top"),
+    btnBottom = $(".button--bottom"),
+    clpToUsd = $(".clpToUsd"),
+    clpToEur = $(".clpToEur"),
+    usdToClp = $(".usdToClp")
+
+// Click en el botón superior
+btnTop.click(function() {
+  clpToUsd.text(app.clpTo('usd'));
+  clpToEur.text(app.clpTo('eur'));
+})
+
+// Click en el botón inferior
+btnBottom.click(function() {
+  usdToClp.text(app.usdTo());
+})
+
+</script>
+
+</body>
+
+
+</html>
